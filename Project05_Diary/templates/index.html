@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Diary</title>
+</head>
+<body>
+    <h1>Personal Diary</h1>
+    <form method="post">
+        <textarea name="entry" placeholder="Write your entry..." required></textarea>
+        <button type="submit">Add Entry</button>
+    </form>
+    <ul>
+        {% for i, e in enumerate(diary) %}
+            <li>{{ e }} <a href="{{ url_for('delete', entry_id=i) }}">[Delete]</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html> 

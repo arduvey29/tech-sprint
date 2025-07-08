@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flashcard Quizzer</title>
+</head>
+<body>
+    <h1>Flashcard Quizzer</h1>
+    <form method="post">
+        <input type="text" name="question" placeholder="Question" required>
+        <input type="text" name="answer" placeholder="Answer" required>
+        <button type="submit">Add Flashcard</button>
+    </form>
+    <ul>
+        {% for i, card in enumerate(flashcards) %}
+            <li>{{ card.question }} <a href="{{ url_for('quiz', card_id=i) }}">[Quiz]</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html> 

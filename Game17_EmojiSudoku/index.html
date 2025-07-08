@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emoji Sudoku</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #board { display: grid; grid-template-columns: repeat(4, 40px); gap: 2px; justify-content: center; margin-top: 30px; }
+        .cell { width: 40px; height: 40px; background: #eee; font-size: 1.5em; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 4px; }
+        #palette { margin: 10px; }
+        .selected { outline: 2px solid #3498db; }
+    </style>
+</head>
+<body>
+    <h1>Emoji Sudoku (4x4)</h1>
+    <div id="board"></div>
+    <div id="palette"></div>
+    <p id="status"></p>
+    <button onclick="check()">Check Solution</button>
+    <script>
+        const emojis = ['🍎','🍌','🍇','🍒'];
+        let puzzle = [
+            [null, '🍌', null, '🍇'],
+            ['🍇', null, '🍎', null],
+            [null, '🍎', null, '🍌'],
+            ['🍒', null, '🍇', null]
+        ];
+        let selected = null, paletteEmoji = null;
+        function render() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            for (let r=0;r<4;r++) for (let c=0;c<4;c++) {
+                let d = document.createElement('div');
+                d.className = 'cell';
+                d.textContent = puzzle[r][c] || '';
+                if (selected && selected[0]===r && selected[1]===c) d.classList.add('selected');
+                d.onclick = () => { selected = [r,c]; render(); };
+                board.appendChild(d);
+            }
+            const pal = document.getElementById('palette');
+            pal.innerHTML = '';
+            emojis.forEach(e => {
+                let b = document.createElement('button');
+                b.textContent = e;
+                b.onclick = () => { if(selected) { puzzle[selected[0]][selected[1]] = e; render(); } };
+                pal.appendChild(b);
+            });
+        }
+        function check() {
+            // Check rows, columns, and 2x2 boxes
+            for (let i=0;i<4;i++) {
+                let row = new Set(), col = new Set();
+                for (let j=0;j<4;j++) {
+                    if (!puzzle[i][j] || !puzzle[j][i]) { document.getElementById('status').textContent = 'Incomplete!'; return; }
+                    row.add(puzzle[i][j]);
+                    col.add(puzzle[j][i]);
+                }
+                if (row.size<4 || col.size<4) { document.getElementById('status').textContent = 'Incorrect!'; return; }
+            }
+            for (let br=0;br<4;br+=2) for (let bc=0;bc<4;bc+=2) {
+                let box = new Set();
+                for (let r=br;r<br+2;r++) for (let c=bc;c<bc+2;c++) box.add(puzzle[r][c]);
+                if (box.size<4) { document.getElementById('status').textContent = 'Incorrect!'; return; }
+            }
+            document.getElementById('status').textContent = 'Correct! 🎉';
+        }
+        render();
+    </script>
+</body>
+</html> 

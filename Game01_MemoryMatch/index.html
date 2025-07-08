@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Match Game</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #game { display: grid; grid-template-columns: repeat(4, 60px); gap: 10px; justify-content: center; margin-top: 30px; }
+        .card { width: 60px; height: 60px; background: #3498db; color: #fff; font-size: 2em; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; }
+        .flipped, .matched { background: #2ecc71; cursor: default; }
+    </style>
+</head>
+<body>
+    <h1>Memory Match</h1>
+    <div id="game"></div>
+    <p id="status"></p>
+    <script>
+        const symbols = ['🍎','🍌','🍒','🍇','🍉','🍋','🍓','🍑'];
+        let cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+        let first = null, second = null, lock = false, matches = 0;
+        const game = document.getElementById('game');
+        const status = document.getElementById('status');
+        function render() {
+            game.innerHTML = '';
+            cards.forEach((sym, i) => {
+                let card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.index = i;
+                if (cards[i] === null) {
+                    card.classList.add('matched');
+                    card.textContent = '';
+                } else if (i === first || i === second) {
+                    card.classList.add('flipped');
+                    card.textContent = sym;
+                } else {
+                    card.textContent = '?';
+                }
+                card.onclick = () => flip(i);
+                game.appendChild(card);
+            });
+        }
+        function flip(i) {
+            if (lock || cards[i] === null || i === first) return;
+            if (first === null) {
+                first = i;
+            } else if (second === null) {
+                second = i;
+                lock = true;
+                setTimeout(check, 800);
+            }
+            render();
+        }
+        function check() {
+            if (cards[first] === cards[second]) {
+                cards[first] = cards[second] = null;
+                matches++;
+                if (matches === symbols.length) status.textContent = 'You win!';
+            }
+            first = second = null;
+            lock = false;
+            render();
+        }
+        render();
+    </script>
+</body>
+</html> 

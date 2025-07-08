@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Habit Tracker</title>
+</head>
+<body>
+    <h1>Habit Tracker</h1>
+    <form method="post">
+        <input type="text" name="habit" placeholder="New habit" required>
+        <button type="submit">Add Habit</button>
+    </form>
+    <ul>
+        {% for i, h in enumerate(habits) %}
+            <li>
+                {% if h.done %}
+                    <s>{{ h.habit }}</s>
+                {% else %}
+                    {{ h.habit }} <a href="{{ url_for('done', habit_id=i) }}">[Done]</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html> 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lights Out</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #board { display: grid; grid-template-columns: repeat(5, 40px); gap: 2px; justify-content: center; margin-top: 30px; }
+        .cell { width: 40px; height: 40px; background: #f1c40f; border-radius: 4px; cursor: pointer; }
+        .off { background: #333; }
+    </style>
+</head>
+<body>
+    <h1>Lights Out</h1>
+    <div id="board"></div>
+    <p id="status"></p>
+    <button onclick="reset()">Reset</button>
+    <script>
+        let board = Array.from({length:5},()=>Array.from({length:5},()=>Math.random()<0.5));
+        function render() {
+            const b = document.getElementById('board');
+            b.innerHTML = '';
+            for(let r=0;r<5;r++) for(let c=0;c<5;c++) {
+                let d = document.createElement('div');
+                d.className = 'cell'+(board[r][c]?'':' off');
+                d.onclick = () => toggle(r,c);
+                b.appendChild(d);
+            }
+        }
+        function toggle(r,c) {
+            [ [0,0],[1,0],[-1,0],[0,1],[0,-1] ].forEach(([dr,dc]) => {
+                let nr=r+dr,nc=c+dc;
+                if(nr>=0&&nr<5&&nc>=0&&nc<5) board[nr][nc]=!board[nr][nc];
+            });
+            render();
+            if (board.flat().every(x=>!x)) document.getElementById('status').textContent='You win!';
+        }
+        function reset() {
+            board = Array.from({length:5},()=>Array.from({length:5},()=>Math.random()<0.5));
+            document.getElementById('status').textContent='';
+            render();
+        }
+        render();
+    </script>
+</body>
+</html> 

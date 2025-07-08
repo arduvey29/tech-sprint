@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Procedural Art Game</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        canvas { border: 1px solid #333; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Procedural Art Game</h1>
+    <canvas id="art" width="400" height="400"></canvas>
+    <br>
+    <button onclick="draw()">New Art</button>
+    <button onclick="save()">Save</button>
+    <script>
+        const canvas = document.getElementById('art');
+        const ctx = canvas.getContext('2d');
+        function rand(a,b) { return Math.random()*(b-a)+a; }
+        function draw() {
+            ctx.clearRect(0,0,400,400);
+            for(let i=0;i<rand(10,30);i++) {
+                ctx.beginPath();
+                ctx.arc(rand(0,400),rand(0,400),rand(10,100),0,2*Math.PI);
+                ctx.fillStyle = `hsl(${rand(0,360)},70%,70%)`;
+                ctx.globalAlpha = rand(0.3,0.8);
+                ctx.fill();
+            }
+            for(let i=0;i<rand(5,15);i++) {
+                ctx.beginPath();
+                ctx.moveTo(rand(0,400),rand(0,400));
+                ctx.lineTo(rand(0,400),rand(0,400));
+                ctx.strokeStyle = `hsl(${rand(0,360)},80%,50%)`;
+                ctx.lineWidth = rand(1,8);
+                ctx.globalAlpha = rand(0.3,0.8);
+                ctx.stroke();
+            }
+            ctx.globalAlpha = 1;
+        }
+        function save() {
+            const url = canvas.toDataURL();
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'art.png';
+            a.click();
+        }
+        draw();
+    </script>
+</body>
+</html> 

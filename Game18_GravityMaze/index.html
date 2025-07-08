@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gravity Maze</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #maze { display: grid; grid-template-columns: repeat(8, 30px); gap: 2px; justify-content: center; margin-top: 30px; }
+        .cell { width: 30px; height: 30px; background: #eee; border-radius: 4px; }
+        .wall { background: #333; }
+        .ball { background: #e67e22; }
+        .exit { background: #2ecc71; }
+    </style>
+</head>
+<body>
+    <h1>Gravity Maze</h1>
+    <div id="maze"></div>
+    <p>Use ◀️ and ▶️ to rotate the maze</p>
+    <p id="status"></p>
+    <script>
+        let maze = [
+            [1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,1],
+            [1,0,1,1,1,0,0,1],
+            [1,0,1,0,1,0,1,1],
+            [1,0,1,0,0,0,0,1],
+            [1,0,0,0,1,1,0,1],
+            [1,1,1,0,1,0,2,1],
+            [1,1,1,1,1,1,1,1]
+        ];
+        let ball = {r:1, c:1};
+        function render() {
+            const m = document.getElementById('maze');
+            m.innerHTML = '';
+            for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+                let d = document.createElement('div');
+                d.className = 'cell';
+                if (maze[r][c]===1) d.classList.add('wall');
+                if (maze[r][c]===2) d.classList.add('exit');
+                if (ball.r===r && ball.c===c) d.classList.add('ball');
+                m.appendChild(d);
+            }
+        }
+        function rotate(dir) {
+            // Rotate maze array left or right
+            let n = maze.length;
+            let newMaze = Array.from({length:n},()=>Array(n).fill(0));
+            for(let r=0;r<n;r++) for(let c=0;c<n;c++) {
+                if(dir==='left') newMaze[n-c-1][r]=maze[r][c];
+                else newMaze[c][n-r-1]=maze[r][c];
+            }
+            maze = newMaze;
+            // Update ball position accordingly
+            let tmp = ball.r;
+            if(dir==='left') { ball.r = 7-ball.c; ball.c = tmp; }
+            else { ball.r = ball.c; ball.c = 7-tmp; }
+            fall();
+        }
+        function fall() {
+            while(true) {
+                if (maze[ball.r+1][ball.c]===0) ball.r++;
+                else if (maze[ball.r+1][ball.c]===2) { ball.r++; document.getElementById('status').textContent='You win!'; break; }
+                else break;
+            }
+            render();
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key==='ArrowLeft') rotate('left');
+            if (e.key==='ArrowRight') rotate('right');
+        });
+        render();
+    </script>
+</body>
+</html> 

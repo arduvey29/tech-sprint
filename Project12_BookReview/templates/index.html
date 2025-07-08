@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Review</title>
+</head>
+<body>
+    <h1>Book Review</h1>
+    <form method="post">
+        <input type="text" name="title" placeholder="Book title" required>
+        <input type="text" name="review" placeholder="Review" required>
+        <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required>
+        <button type="submit">Add Review</button>
+    </form>
+    <ul>
+        {% for b in books %}
+            <li><b>{{ b.title }}</b>: {{ b.review }} (Rating: {{ b.rating }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html> 

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tarot Card Reader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #6a5acd;
+        }
+        input {
+            padding: 10px;
+            font-size: 1.2em;
+            width: 300px;
+            border: 2px solid #6a5acd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            margin-top: 10px;
+            background-color: #6a5acd;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5a4cb4;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            max-width: 500px;
+            word-wrap: break-word;
+            color: #333;
+        }
+        .result p {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Tarot Card Reader</h1>
+    <input type="text" id="question" placeholder="Ask a question...">
+    <button onclick="getReading()">Get Your Tarot Reading</button>
+
+    <div class="result">
+        <p id="reading">Your tarot reading will appear here...</p>
+    </div>
+
+    <script>
+        function getReading() {
+            var question = document.getElementById('question').value;
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `question=${question}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('reading').innerText = data.reading;
+            })
+            .catch(error => {
+                document.getElementById('reading').innerText = "Sorry, something went wrong. Please try again.";
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

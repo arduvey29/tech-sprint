@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sound Pattern Memory</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #buttons { display: flex; justify-content: center; gap: 20px; margin-top: 30px; }
+        .btn { width: 60px; height: 60px; border-radius: 50%; border: none; outline: none; font-size: 1.5em; cursor: pointer; background: #ccc; }
+        .active { filter: brightness(1.5); }
+    </style>
+</head>
+<body>
+    <h1>Sound Pattern Memory</h1>
+    <div id="buttons">
+        <button class="btn" id="0">A</button>
+        <button class="btn" id="1">B</button>
+        <button class="btn" id="2">C</button>
+        <button class="btn" id="3">D</button>
+    </div>
+    <p id="status"></p>
+    <button onclick="start()">Start</button>
+    <script>
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const freqs = [261.6, 329.6, 392.0, 523.3];
+        function playTone(i) {
+            const o = ctx.createOscillator();
+            o.type = 'sine';
+            o.frequency.value = freqs[i];
+            o.connect(ctx.destination);
+            o.start();
+            setTimeout(()=>o.stop(), 300);
+        }
+        let sequence = [], user = [], playing = false;
+        function flash(i) {
+            const btn = document.getElementById(i);
+            btn.classList.add('active');
+            playTone(i);
+            setTimeout(()=>btn.classList.remove('active'), 300);
+        }
+        function playSeq() {
+            let i = 0;
+            playing = true;
+            function next() {
+                if (i < sequence.length) {
+                    flash(sequence[i]);
+                    setTimeout(next, 600);
+                    i++;
+                } else {
+                    playing = false;
+                }
+            }
+            next();
+        }
+        function start() {
+            sequence = [Math.floor(Math.random()*4)];
+            user = [];
+            document.getElementById('status').textContent = '';
+            playSeq();
+        }
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.onclick = function() {
+                if (playing) return;
+                const idx = parseInt(this.id);
+                user.push(idx);
+                flash(idx);
+                if (user[user.length-1] !== sequence[user.length-1]) {
+                    document.getElementById('status').textContent = 'Wrong! Game Over.';
+                    sequence = [];
+                    user = [];
+                } else if (user.length === sequence.length) {
+                    document.getElementById('status').textContent = 'Correct! Next round...';
+                    setTimeout(()=>{
+                        sequence.push(Math.floor(Math.random()*4));
+                        user = [];
+                        playSeq();
+                    }, 1000);
+                }
+            };
+        });
+    </script>
+</body>
+</html> 

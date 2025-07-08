@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Polling App</title>
+</head>
+<body>
+    <h1>Polling App</h1>
+    <form method="post">
+        <button type="submit" name="vote" value="Option A">Vote Option A</button>
+        <button type="submit" name="vote" value="Option B">Vote Option B</button>
+    </form>
+    <h2>Results</h2>
+    <ul>
+        <li>Option A: {{ votes['Option A'] }}</li>
+        <li>Option B: {{ votes['Option B'] }}</li>
+    </ul>
+</body>
+</html> 

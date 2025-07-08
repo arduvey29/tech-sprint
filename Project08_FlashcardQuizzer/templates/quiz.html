@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+</head>
+<body>
+    <h1>Quiz</h1>
+    <p><b>Question:</b> {{ card.question }}</p>
+    <button onclick="document.getElementById('answer').style.display='block'">Show Answer</button>
+    <p id="answer" style="display:none"><b>Answer:</b> {{ card.answer }}</p>
+    <a href="/">Back</a>
+</body>
+</html> 

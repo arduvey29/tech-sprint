@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snake Game</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; }
+        #board { display: grid; grid-template-columns: repeat(20, 15px); gap: 1px; justify-content: center; margin-top: 30px; }
+        .cell { width: 15px; height: 15px; background: #eee; }
+        .snake { background: #27ae60; }
+        .food { background: #e74c3c; }
+    </style>
+</head>
+<body>
+    <h1>Snake Game</h1>
+    <div id="board"></div>
+    <p id="status"></p>
+    <button onclick="start()">Start</button>
+    <script>
+        let snake, dir, food, timer, alive;
+        function start() {
+            snake = [42,41,40];
+            dir = 1;
+            food = Math.floor(Math.random()*400);
+            alive = true;
+            if (timer) clearInterval(timer);
+            timer = setInterval(move, 100);
+            render();
+        }
+        function move() {
+            let head = snake[0] + dir;
+            if (dir===-1 && head%20===19) head+=20;
+            if (dir===1 && head%20===0) head-=20;
+            if (dir===-20 && head<0) head+=400;
+            if (dir===20 && head>=400) head-=400;
+            if (snake.includes(head)) { alive=false; document.getElementById('status').textContent='Game Over!'; clearInterval(timer); return; }
+            snake.unshift(head);
+            if (head === food) {
+                food = Math.floor(Math.random()*400);
+            } else {
+                snake.pop();
+            }
+            render();
+        }
+        function render() {
+            const b = document.getElementById('board');
+            b.innerHTML = '';
+            for (let i=0;i<400;i++) {
+                let d = document.createElement('div');
+                d.className = 'cell';
+                if (snake.includes(i)) d.classList.add('snake');
+                if (i===food) d.classList.add('food');
+                b.appendChild(d);
+            }
+        }
+        document.addEventListener('keydown', e => {
+            if (!alive) return;
+            if (e.key==='ArrowLeft' && dir!==1) dir=-1;
+            if (e.key==='ArrowRight' && dir!==-1) dir=1;
+            if (e.key==='ArrowUp' && dir!==20) dir=-20;
+            if (e.key==='ArrowDown' && dir!==-20) dir=20;
+        });
+        render();
+    </script>
+</body>
+</html> 
